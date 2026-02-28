@@ -1,0 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# Auto-detect the first connected USB device path
+USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
+
+if [ -z "$USB_PATH" ]; then
+    echo "Error: No USB device found. Please connect your scanner."
+    exit 1
+fi
+
+echo "Found USB device at $USB_PATH. Requesting permission..."
+# Run the actual scanner script and pass the USB path
+termux-usb -r -e run_scanner.sh "$USB_PATH"

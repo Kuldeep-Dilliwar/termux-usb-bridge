@@ -1,0 +1,51 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+PAPER="a4"
+FIT=""
+FILE_PATH=""
+RES="1200x600" # Default resolution for HP M1136/P1100 series
+MODEL="-z1"    # Default protocol for HP M1136/P1100 series
+
+# Parse command line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --letter) PAPER="letter"; shift ;;
+        --a4) PAPER="a4"; shift ;;
+        --fit) FIT="-dPDFFitPage"; shift ;;
+        --res) RES="$2"; shift 2 ;;
+        --model) MODEL="$2"; shift 2 ;;
+        -h|--help) 
+            echo "Usage: termux-print [options] <file.pdf>"
+            echo "Options:"
+            echo "  --a4       Print on A4 paper (Default)"
+            echo "  --letter   Print on US Letter paper"
+            echo "  --fit      Scale the PDF to fit inside printable margins"
+            echo "  --res      Set DPI resolution (Default: 1200x600). Example: --res 600x600"
+            echo "  --model    Set foo2zjs protocol (Default: -z1). Example: --model -z0"
+            exit 0
+            ;;
+        *) FILE_PATH=$(realpath "$1"); shift ;;
+    esac
+done
+
+if [ -z "$FILE_PATH" ] || [ ! -f "$FILE_PATH" ]; then
+    echo "Error: Please provide a valid file path."
+    echo "Type 'termux-print --help' for usage."
+    exit 1
+fi
+
+export FILE_TO_PRINT="$FILE_PATH"
+export PRINT_PAPER="$PAPER"
+export PRINT_FIT="$FIT"
+export PRINT_RES="$RES"
+export PRINT_MODEL="$MODEL"
+
+USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
+
+if [ -z "$USB_PATH" ]; then
+    echo "Error: No USB device found. Please connect your printer."
+    exit 1
+fi
+
+echo "Found USB device at $USB_PATH. Requesting permission to print..."
+termux-usb -r -e run_printer.sh "$USB_PATH"
