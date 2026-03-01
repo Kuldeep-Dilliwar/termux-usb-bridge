@@ -1,30 +1,36 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-PAPER="a4"
-FIT=""
+PAPER_GS="a4"
+PAPER_CUPS="A4"
+FOO_PAPER="-p9"
+FIT_GS=""
+FIT_CUPS=""
 FILE_PATH=""
 RES="1200x600" # Default resolution for HP M1136/P1100 series
 MODEL="-z1"    # Default protocol for HP M1136/P1100 series
-GS_EXTRA_ARGS="" # New variable for arbitrary Ghostscript flags
+GS_EXTRA_ARGS="" 
+FORCE_DRIVER=""
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        --letter) PAPER="letter"; shift ;;
-        --a4) PAPER="a4"; shift ;;
-        --fit) FIT="-dPDFFitPage"; shift ;;
+        --letter) PAPER_GS="letter"; PAPER_CUPS="Letter"; FOO_PAPER="-p1"; shift ;;
+        --a4) PAPER_GS="a4"; PAPER_CUPS="A4"; FOO_PAPER="-p9"; shift ;;
+        --fit) FIT_GS="-dPDFFitPage"; FIT_CUPS="-o fit-to-page"; shift ;;
         --res) RES="$2"; shift 2 ;;
         --model) MODEL="$2"; shift 2 ;;
         --gs-args) GS_EXTRA_ARGS="$2"; shift 2 ;;
+        --driver) FORCE_DRIVER="$2"; shift 2 ;;
         -h|--help) 
             echo "Usage: termux-print [options] <file.pdf>"
             echo "Options:"
             echo "  --a4       Print on A4 paper (Default)"
             echo "  --letter   Print on US Letter paper"
             echo "  --fit      Scale the PDF to fit inside printable margins"
-            echo "  --res      Set DPI resolution (Default: 1200x600). Example: --res 600x600"
-            echo "  --model    Set foo2zjs protocol (Default: -z1). Example: --model -z0"
-            echo "  --gs-args  Pass custom flags directly to Ghostscript. Example: --gs-args \"-dFirstPage=1 -dLastPage=3\""
+            echo "  --res      Set DPI resolution (HP/foo2zjs only. Default: 1200x600)"
+            echo "  --model    Set foo2zjs protocol (HP/foo2zjs only. Default: -z1)"
+            echo "  --gs-args  Pass custom flags to Ghostscript (HP/foo2zjs only)"
+            echo "  --driver   Force specific CUPS driver (Non-HP only)"
             exit 0
             ;;
         *) FILE_PATH=$(realpath "$1"); shift ;;
@@ -38,11 +44,15 @@ if [ -z "$FILE_PATH" ] || [ ! -f "$FILE_PATH" ]; then
 fi
 
 export FILE_TO_PRINT="$FILE_PATH"
-export PRINT_PAPER="$PAPER"
-export PRINT_FIT="$FIT"
+export PRINT_PAPER_GS="$PAPER_GS"
+export PRINT_PAPER_CUPS="$PAPER_CUPS"
+export FOO_PAPER="$FOO_PAPER"
+export PRINT_FIT_GS="$FIT_GS"
+export PRINT_FIT_CUPS="$FIT_CUPS"
 export PRINT_RES="$RES"
 export PRINT_MODEL="$MODEL"
 export GS_EXTRA_ARGS="$GS_EXTRA_ARGS"
+export FORCE_DRIVER="$FORCE_DRIVER"
 
 USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
 
