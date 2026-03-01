@@ -5,6 +5,7 @@
 > **⚠️ DISCLAIMER: RUN AT YOUR OWN RISK ⚠️**
 > **Please note:** This setup uses `proot` to create a "fake root" sandbox so the Linux drivers can work. Because of this, strict security apps (like banking or mobile carrier apps) might temporarily throw a **"Device is Rooted" false alarm** if you open them while scanning or printing.
 > **Your device is NOT actually rooted.** If you see this warning, simply finish your print/scan, close Termux, and clear the app data of the affected security app. It will instantly return to normal.
+> *(for me this happen only once, no idea why it only happened once, and never saw the false alerm again).*
 
 ## 📱 Prerequisites: Required Android Apps
 
