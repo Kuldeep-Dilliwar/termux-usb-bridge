@@ -5,6 +5,7 @@ FIT=""
 FILE_PATH=""
 RES="1200x600" # Default resolution for HP M1136/P1100 series
 MODEL="-z1"    # Default protocol for HP M1136/P1100 series
+GS_EXTRA_ARGS="" # New variable for arbitrary Ghostscript flags
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -14,6 +15,7 @@ while [[ "$#" -gt 0 ]]; do
         --fit) FIT="-dPDFFitPage"; shift ;;
         --res) RES="$2"; shift 2 ;;
         --model) MODEL="$2"; shift 2 ;;
+        --gs-args) GS_EXTRA_ARGS="$2"; shift 2 ;;
         -h|--help) 
             echo "Usage: termux-print [options] <file.pdf>"
             echo "Options:"
@@ -22,6 +24,7 @@ while [[ "$#" -gt 0 ]]; do
             echo "  --fit      Scale the PDF to fit inside printable margins"
             echo "  --res      Set DPI resolution (Default: 1200x600). Example: --res 600x600"
             echo "  --model    Set foo2zjs protocol (Default: -z1). Example: --model -z0"
+            echo "  --gs-args  Pass custom flags directly to Ghostscript. Example: --gs-args \"-dFirstPage=1 -dLastPage=3\""
             exit 0
             ;;
         *) FILE_PATH=$(realpath "$1"); shift ;;
@@ -39,6 +42,7 @@ export PRINT_PAPER="$PAPER"
 export PRINT_FIT="$FIT"
 export PRINT_RES="$RES"
 export PRINT_MODEL="$MODEL"
+export GS_EXTRA_ARGS="$GS_EXTRA_ARGS"
 
 USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
 

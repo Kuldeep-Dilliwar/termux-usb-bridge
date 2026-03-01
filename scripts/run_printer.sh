@@ -27,7 +27,7 @@ proot-distro login ubuntu \
     --bind "$HOME/fake_usb/dev/bus/usb:/dev/bus/usb" \
     --bind "$HOME:$HOME" \
     --bind "$REPO_DIR:/repo" \
-    -- env TERMUX_USB_FD="$FD" TERMUX_USB_DEV="$DEV_STR" FILE_TO_PRINT="$FILE_TO_PRINT" PRINT_PAPER="$PRINT_PAPER" PRINT_FIT="$PRINT_FIT" FOO_PAPER="$FOO_PAPER" PRINT_RES="$PRINT_RES" PRINT_MODEL="$PRINT_MODEL" bash -c "
+    -- env TERMUX_USB_FD="$FD" TERMUX_USB_DEV="$DEV_STR" FILE_TO_PRINT="$FILE_TO_PRINT" PRINT_PAPER="$PRINT_PAPER" PRINT_FIT="$PRINT_FIT" FOO_PAPER="$FOO_PAPER" PRINT_RES="$PRINT_RES" PRINT_MODEL="$PRINT_MODEL" GS_EXTRA_ARGS="$GS_EXTRA_ARGS" bash -c "
 
     # 1. Rebuild Bridge from Template
     cp /repo/src/printer_bridge_template.c /tmp/printer_bridge.c
@@ -37,7 +37,9 @@ proot-distro login ubuntu \
 
     # 2. Render PDF to ZJS (Using fully dynamic settings)
     echo \"[*] Rendering PDF (Size: \$PRINT_PAPER, Res: \$PRINT_RES, Model: \$PRINT_MODEL)...\"
-    ghostscript -q -dBATCH -dSAFER -dNOPAUSE -sDEVICE=pbmraw -sPAPERSIZE=\"\$PRINT_PAPER\" \$PRINT_FIT -r\"\$PRINT_RES\" -sOutputFile=- \"\$FILE_TO_PRINT\" | foo2zjs \"\$PRINT_MODEL\" \"\$FOO_PAPER\" -P > /tmp/out.zjs
+    
+    # \$GS_EXTRA_ARGS is placed unquoted here to allow bash word-splitting for multiple flags
+    ghostscript -q -dBATCH -dSAFER -dNOPAUSE -sDEVICE=pbmraw -sPAPERSIZE=\"\$PRINT_PAPER\" \$PRINT_FIT -r\"\$PRINT_RES\" \$GS_EXTRA_ARGS -sOutputFile=- \"\$FILE_TO_PRINT\" | foo2zjs \"\$PRINT_MODEL\" \"\$FOO_PAPER\" -P > /tmp/out.zjs
 
     # 3. Validation
     SIZE_KB=\$(du -k /tmp/out.zjs | awk '{print \$1}')

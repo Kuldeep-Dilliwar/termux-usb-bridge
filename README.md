@@ -47,11 +47,19 @@ You can customize paper size, scaling, and hardware protocols:
 * `--fit` : Scale the PDF to fit inside printable margins
 * `--res` : Set DPI resolution (Default: `1200x600`)
 * `--model` : Set foo2zjs protocol (Default: `-z1`)
+* `--gs-args` : Pass custom flags directly to Ghostscript (Ensure you wrap the flags in quotes).
 
-*Example for an older HP 1020 on Letter paper:*
+*Example 1: Older HP 1020 on Letter paper:*
 
 ```bash
 termux-print --res 600x600 --model -z0 --letter --fit document.pdf
+
+```
+
+*Example 2: Print only pages 2 through 4 in Grayscale using Ghostscript arguments:*
+
+```bash
+termux-print --gs-args "-dFirstPage=2 -dLastPage=4 -sColorConversionStrategy=Gray" document.pdf
 
 ```
 
