@@ -10,6 +10,7 @@ RES="1200x600" # Default resolution for HP M1136/P1100 series
 MODEL="-z1"    # Default protocol for HP M1136/P1100 series
 GS_EXTRA_ARGS="" 
 FORCE_DRIVER=""
+export BRIDGE_LOG_LEVEL=0
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -21,6 +22,7 @@ while [[ "$#" -gt 0 ]]; do
         --model) MODEL="$2"; shift 2 ;;
         --gs-args) GS_EXTRA_ARGS="$2"; shift 2 ;;
         --driver) FORCE_DRIVER="$2"; shift 2 ;;
+        -l|--log-level) BRIDGE_LOG_LEVEL="$2"; shift 2 ;;
         -h|--help) 
             echo "Usage: termux-print [options] <file.pdf>"
             echo "Options:"
@@ -31,6 +33,7 @@ while [[ "$#" -gt 0 ]]; do
             echo "  --model    Set foo2zjs protocol (HP/foo2zjs only. Default: -z1)"
             echo "  --gs-args  Pass custom flags to Ghostscript (HP/foo2zjs only)"
             echo "  --driver   Force specific CUPS driver (Non-HP only)"
+            echo "  -l level   Set libusb log level (0-4, default 0)"
             exit 0
             ;;
         *) FILE_PATH=$(realpath "$1"); shift ;;
@@ -53,6 +56,7 @@ export PRINT_RES="$RES"
 export PRINT_MODEL="$MODEL"
 export GS_EXTRA_ARGS="$GS_EXTRA_ARGS"
 export FORCE_DRIVER="$FORCE_DRIVER"
+export BRIDGE_LOG_LEVEL="$BRIDGE_LOG_LEVEL"
 
 USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
 

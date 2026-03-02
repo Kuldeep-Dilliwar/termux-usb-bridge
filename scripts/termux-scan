@@ -3,6 +3,7 @@
 RES="300"
 MODE="Color" # SANE expects "Color", "Gray", or "Lineart"
 SCAN_EXTRA_ARGS=""
+export BRIDGE_LOG_LEVEL=0
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -10,12 +11,14 @@ while [[ "$#" -gt 0 ]]; do
         --res) RES="$2"; shift 2 ;;
         --mode) MODE="$2"; shift 2 ;;
         --scan-args) SCAN_EXTRA_ARGS="$2"; shift 2 ;;
+        -l|--log-level) BRIDGE_LOG_LEVEL="$2"; shift 2 ;;
         -h|--help) 
             echo "Usage: termux-scan [options]"
             echo "Options:"
             echo "  --res        Set DPI resolution (Default: 300). Example: --res 600"
             echo "  --mode       Set color mode (Color, Gray, Lineart). Default: Color"
             echo "  --scan-args  Pass custom SANE flags. Example: --scan-args \"--source 'ADF'\""
+            echo "  -l level     Set libusb log level (0-4, default 0)"
             exit 0
             ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
@@ -25,6 +28,7 @@ done
 export SCAN_RES="$RES"
 export SCAN_MODE="$MODE"
 export SCAN_EXTRA_ARGS="$SCAN_EXTRA_ARGS"
+export BRIDGE_LOG_LEVEL="$BRIDGE_LOG_LEVEL"
 
 USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
 

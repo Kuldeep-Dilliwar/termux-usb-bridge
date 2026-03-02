@@ -27,9 +27,9 @@ proot-distro login ubuntu \
     gcc -shared -fPIC -o /usr/local/lib/libusb_bridge.so /tmp/usb_bridge.c -ldl
 "
 
-echo "3. Running lsusb -v through Custom libusb & C-Bridge..."
+echo "3. Running lsusb $BRIDGE_LSUSB_VERBOSE through Custom libusb & C-Bridge..."
 proot-distro login ubuntu \
     --bind "$HOME/fake_usb/sys/bus/usb:/sys/bus/usb" \
     --bind "$HOME/fake_usb/dev/bus/usb:/dev/bus/usb" \
-    -- env LD_LIBRARY_PATH="/usr/local/lib" TERMUX_USB_FD="$FD" LIBUSB_DEBUG=4 LD_PRELOAD="/usr/local/lib/libusb_bridge.so" \
-    bash -c "lsusb -v -s 1:$DEV"
+    -- env LD_LIBRARY_PATH="/usr/local/lib" TERMUX_USB_FD="$FD" LIBUSB_DEBUG="${BRIDGE_LOG_LEVEL:-0}" LD_PRELOAD="/usr/local/lib/libusb_bridge.so" \
+    bash -c "lsusb $BRIDGE_LSUSB_VERBOSE -s 1:$DEV"

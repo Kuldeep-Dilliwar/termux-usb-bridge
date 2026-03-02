@@ -42,7 +42,7 @@ proot-distro login ubuntu \
     --bind "$HOME/fake_usb/sys/bus/usb:/sys/bus/usb" \
     --bind "$HOME/fake_usb/dev/bus/usb:/dev/bus/usb" \
     --bind "$HOME:$HOME" \
-    -- env LD_LIBRARY_PATH="/usr/local/lib" TERMUX_USB_FD="$FD" LIBUSB_DEBUG=4 TARGET_USB_PATH="$USB_PATH" LD_PRELOAD="/usr/local/lib/libusb_bridge.so" SCAN_MODE="$SCAN_MODE" SCAN_RES="$SCAN_RES" SCAN_EXTRA_ARGS="$SCAN_EXTRA_ARGS" OUT_FILE="$OUT_FILE" \
+    -- env LD_LIBRARY_PATH="/usr/local/lib" TERMUX_USB_FD="$FD" LIBUSB_DEBUG="${BRIDGE_LOG_LEVEL:-0}" TARGET_USB_PATH="$USB_PATH" LD_PRELOAD="/usr/local/lib/libusb_bridge.so" SCAN_MODE="$SCAN_MODE" SCAN_RES="$SCAN_RES" SCAN_EXTRA_ARGS="$SCAN_EXTRA_ARGS" OUT_FILE="$OUT_FILE" \
     bash -c "scanimage --format=jpeg --mode=\"\$SCAN_MODE\" --resolution=\"\$SCAN_RES\" \$SCAN_EXTRA_ARGS -o \"\$OUT_FILE\""
 
 if [ -f "$OUT_FILE" ]; then
