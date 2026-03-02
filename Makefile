@@ -49,8 +49,10 @@ install: install-deps all
 	@echo "Copying worker scripts and wrappers to global bin..."
 	cp $(SCRIPT_DIR)/run_scanner.sh $(PREFIX)/bin/
 	cp $(SCRIPT_DIR)/run_printer.sh $(PREFIX)/bin/
+	cp $(SCRIPT_DIR)/run_lsusb.sh $(PREFIX)/bin/
 	cp $(SCRIPT_DIR)/termux-scan $(PREFIX)/bin/
 	cp $(SCRIPT_DIR)/termux-print $(PREFIX)/bin/
+	cp $(SCRIPT_DIR)/termux-lsusb $(PREFIX)/bin/
 	chmod +x $(PREFIX)/bin/run_*.sh $(PREFIX)/bin/termux-*
 	
 	mkdir -p ~/.shortcuts

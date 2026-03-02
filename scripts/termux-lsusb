@@ -1,0 +1,23 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# Parse command line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            echo "Usage: termux-lsusb"
+            echo "Lists the first found USB device with verbose details using proot bridge."
+            exit 0
+            ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+done
+
+USB_PATH=$(termux-usb -l | grep -o "/dev/bus/usb/[0-9]*/[0-9]*" | head -n 1)
+
+if [ -z "$USB_PATH" ]; then
+    echo "Error: No USB device found."
+    exit 1
+fi
+
+echo "Found USB device at $USB_PATH. Requesting permission..."
+termux-usb -r -e run_lsusb.sh "$USB_PATH"
